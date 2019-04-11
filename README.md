@@ -1,3 +1,4 @@
+![pub](https://img.shields.io/pub/v/flutter_app_auth_wrapper.svg)
 # flutter_app_auth_wrapper
 
 The package wraps [App Auth](https://appauth.io), an OAuth 2.0 client for native
@@ -11,7 +12,8 @@ app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
 `github.showang.flutterappauthwrapper.OAuthActivity` intent. For example:
 
 ```xml
-<application>
+<application
+    xmlns:tools="http://schemas.android.com/tools">
     
     ...
 
@@ -38,6 +40,18 @@ app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
         android:theme="@style/Theme.AppCompat.Translucent" />    
 </application> 
 
+```
+
+Add translucent theme style to `res/values`.
+
+```xml
+<style name="Theme.AppCompat.Translucent" parent="@style/Theme.AppCompat.NoActionBar">
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation</item>
+</style>
 ```
 
 Replace `ACCEPTED_HOST` and `YOUR_APP_SCHEME` depends on your app's definition.
