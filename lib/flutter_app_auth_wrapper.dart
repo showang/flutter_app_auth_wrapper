@@ -49,17 +49,18 @@ class AuthConfig {
 
   Map<String, String> customParameters;
 
-  AuthConfig(
-      {@required this.clientId,
-      @required this.clientSecret,
-      @required this.redirectUrl,
-      @required this.endpoint,
-      this.type = AuthType.CODE,
-      this.state = "login",
-      this.prompt = "",
-      this.scopes = const <String>[],
-      this.customParameters = const {},
-      this.color});
+  AuthConfig({
+    @required this.clientId,
+    @required this.clientSecret,
+    @required this.redirectUrl,
+    @required this.endpoint,
+    this.type = AuthType.CODE,
+    this.state = "login",
+    this.scopes = const <String>[],
+    this.customParameters = const {},
+    this.prompt,
+    this.color,
+  });
 
   String buildJson() {
     return json.encode({
