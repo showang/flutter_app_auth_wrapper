@@ -42,6 +42,8 @@ app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
 
 Replace `ACCEPTED_HOST` and `YOUR_APP_SCHEME` depends on your app's definition.
 
+For further information, please visit the page of [AppAuth Android](https://github.com/openid/AppAuth-Android).
+
 ## iOS
 
 You need to add your own custom URL scheme to the Info.plist file.
@@ -77,7 +79,35 @@ override func application(_ app: UIApplication, open url: URL, options: [UIAppli
 }
 ```
 
+For further information, please visit the page of [AppAuth iOS](https://github.com/openid/AppAuth-iOS).
 
-### NOTES
+# Use this package as a library
+## 1. Depend on it
+Add this to your package's pubspec.yaml file:
 
-For further information, please visit the page of [AppAuth Android](https://github.com/openid/AppAuth-Android).
+```yaml
+dependencies:
+  flutter_app_auth_wrapper: {last_version}
+```
+
+## 2. Install it
+You can install packages from the command line:
+
+with pub:
+
+```console
+$ pub get
+```
+with Flutter:
+
+```console
+$ flutter packages get
+```
+Alternatively, your editor might support pub get or flutter packages get. Check the docs for your editor to learn more.
+
+## 3. Import it
+Now in your Dart code, you can use:
+
+```dart
+import 'package:flutter_app_auth_wrapper/flutter_app_auth_wrapper.dart';
+```
