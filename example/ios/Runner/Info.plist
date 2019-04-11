@@ -27,7 +27,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kkboxkids</string>
+				<string>your_custom_url_scheme</string>
 			</array>
 		</dict>
 	</array>
