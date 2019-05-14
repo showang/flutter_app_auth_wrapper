@@ -40,7 +40,6 @@ class OAuthActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val authConfig = authConfig ?: return
         val authRequest = with(AuthorizationRequest.Builder(
                 AuthorizationServiceConfiguration(
@@ -60,19 +59,25 @@ class OAuthActivity : AppCompatActivity() {
 
         authService = AuthorizationService(this)
 
-        val authIntent = authService?.getAuthorizationRequestIntent(authRequest, with(CustomTabsIntent.Builder()) {
-            setToolbarColor(Color.parseColor(authConfig.color ?: "#2196F3"))
-            setShowTitle(true)
-            enableUrlBarHiding()
-            build()
-        })
+        val authIntent: Intent? = try {
+            authService?.getAuthorizationRequestIntent(authRequest, with(CustomTabsIntent.Builder()) {
+                setToolbarColor(Color.parseColor(authConfig.color ?: "#2196F3"))
+                setShowTitle(true)
+                enableUrlBarHiding()
+                build()
+            })
+        } catch (e: Throwable) {
+            AuthorizationManagementActivity.createStartForResultIntent(this, authRequest, Intent(Intent.ACTION_VIEW).apply {
+                data = authRequest.toUri()
+            })
+        }
         startActivityForResult(authIntent, REQUEST_AUTH_CODE)
 
     }
 
     override fun onDestroy() {
-        authService?.dispose()
         super.onDestroy()
+        authService?.dispose()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -5,7 +5,49 @@ The package wraps [App Auth](https://appauth.io), an OAuth 2.0 client for native
 iOS and Android app development, into Flutter. You can use the package to
 implements Oauth2 Authentication Code Flow in your Flutter app.
 
-## Android
+## Usage
+
+Start oauth flow
+
+```dart
+FlutterAppAuthWrapper.startAuth(
+                      AuthConfig(
+                        clientId: clientId,
+                        clientSecret: clientSecret,
+                        redirectUrl: redirectURL,
+                        state: "login",
+                        prompt: "consent",
+                        endpoint: 
+                        AuthEndpoint(auth: authEndpoint, token: tokenEndpoint),
+                        scopes: [
+                          "user_account_status",
+                          "user_territory",
+                          "user_profile"
+                        ],
+                      ),
+                    );
+```
+
+Listen result event by `FlutterAppAuthWrapper.eventStream()`.
+
+```dart
+StreamBuilder(
+                initialData: "init state",
+                stream: FlutterAppAuthWrapper.eventStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    var error = snapshot.error as PlatformException;
+                    return Text("[Error] ${error.message}: ${error.details}");
+                  } else {
+                    return Text(snapshot.data.toString());
+                  }
+                },
+              )
+```
+
+## Setting Up
+
+### Android
 
 You need to do additional configuration in your AndroidManifest.xml to let your
 app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
@@ -51,6 +93,7 @@ Add translucent theme style to `res/values`.
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
 </style>
 ```
 
@@ -58,7 +101,7 @@ Replace `ACCEPTED_HOST` and `YOUR_APP_SCHEME` depends on your app's definition.
 
 For further information, please visit the page of [AppAuth Android](https://github.com/openid/AppAuth-Android).
 
-## iOS
+### iOS
 
 You need to add your own custom URL scheme to the Info.plist file.
 

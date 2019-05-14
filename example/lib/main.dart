@@ -36,20 +36,22 @@ class _MyAppState extends State<MyApp> {
                 height: 100,
                 child: MaterialButton(
                   onPressed: () {
-                    FlutterAppAuthWrapper.startAuth(AuthConfig(
-                      clientId: clientId,
-                      clientSecret: clientSecret,
-                      redirectUrl: redirectURL,
-                      state: "login",
-                      prompt: "consent",
-                      endpoint: AuthEndpoint(
-                          auth: authEndpoint, token: tokenEndpoint),
-                      scopes: [
-                        "user_account_status",
-                        "user_territory",
-                        "user_profile"
-                      ],
-                    ));
+                    FlutterAppAuthWrapper.startAuth(
+                      AuthConfig(
+                        clientId: clientId,
+                        clientSecret: clientSecret,
+                        redirectUrl: redirectURL,
+                        state: "login",
+                        prompt: "consent",
+                        endpoint: AuthEndpoint(
+                            auth: authEndpoint, token: tokenEndpoint),
+                        scopes: [
+                          "user_account_status",
+                          "user_territory",
+                          "user_profile"
+                        ],
+                      ),
+                    );
                   },
                   child: Text('start OAuth'),
                 ),
