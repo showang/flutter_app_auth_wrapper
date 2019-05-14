@@ -49,6 +49,15 @@ StreamBuilder(
 
 ### Android
 
+Only support AndroidX.
+
+Add following properties into `gradle.properties` to enable AndroidX support.
+```properties
+android.enableJetifier=true
+android.useAndroidX=true
+```
+
+
 You need to do additional configuration in your AndroidManifest.xml to let your
 app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
 `github.showang.flutterappauthwrapper.OAuthActivity` intent. For example:
