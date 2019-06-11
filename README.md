@@ -1,4 +1,4 @@
-![pub](https://img.shields.io/pub/v/flutter_app_auth_wrapper.svg)
+[![pub package](https://img.shields.io/pub/v/flutter_app_auth_wrapper.svg)](https://pub.dev/packages/flutter_app_auth_wrapper)
 # flutter_app_auth_wrapper
 
 The package wraps [App Auth](https://appauth.io), an OAuth 2.0 client for native
