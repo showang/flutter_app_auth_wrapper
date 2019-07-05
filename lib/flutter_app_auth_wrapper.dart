@@ -14,6 +14,7 @@ class FlutterAppAuthWrapper {
     return await _channel.invokeMethod('startOAuth', config.buildJson());
   }
 
+  /// EventStream send
   static Stream<dynamic> eventStream() {
     return _authEventChannel.receiveBroadcastStream();
   }
