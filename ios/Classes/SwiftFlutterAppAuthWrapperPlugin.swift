@@ -90,7 +90,7 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 				dict["refresh_token"] = response.refreshToken ?? ""
 				// The Objective-C code of AppAuth library may return an object in a type other than NSDate.
 				// Thus, we should not be naive to trust the type here.
-				dict["expires_at"] = Int(((response.accessTokenExpirationDate as? Date)?.timeIntervalSince1970 ?? 0) * 1000)
+				dict["expires_at"] = Int64(((response.accessTokenExpirationDate)?.timeIntervalSince1970 ?? 0) * 1000)
 				do {
 					let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
 					let string = String(data: data, encoding: .utf8)
