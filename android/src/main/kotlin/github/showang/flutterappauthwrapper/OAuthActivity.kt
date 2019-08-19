@@ -11,8 +11,6 @@ import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import net.openid.appauth.*
 import net.openid.appauth.browser.BrowserBlacklist
-import net.openid.appauth.browser.BrowserWhitelist
-import net.openid.appauth.browser.VersionedBrowserMatcher
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -130,10 +128,6 @@ fun stringExtra(key: String) =
         object : ReadOnlyProperty<Activity, String> {
 
             private var data: String? = null
-
-            val testFun: () -> String = {
-                ""
-            }
 
             override fun getValue(thisRef: Activity, property: KProperty<*>): String {
                 if (data == null) data = thisRef.intent.getStringExtra(key)
