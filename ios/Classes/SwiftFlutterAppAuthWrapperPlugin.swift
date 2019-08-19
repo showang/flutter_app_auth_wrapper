@@ -7,18 +7,11 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 	public static func register(with registrar: FlutterPluginRegistrar) {
 		let channel = FlutterMethodChannel(name: "flutter_app_auth_wrapper", binaryMessenger: registrar.messenger())
 		let eventChannel = FlutterEventChannel(name: "oauth_completion_events", binaryMessenger: registrar.messenger())
-		let currentVC = (registrar.messenger() as? FlutterEngine)?.viewController
-		let instance = SwiftFlutterAppAuthWrapperPlugin(with: currentVC)
+		let instance = SwiftFlutterAppAuthWrapperPlugin()
 
 		eventChannel.setStreamHandler(instance)
+		registrar.addApplicationDelegate(instance)
 		registrar.addMethodCallDelegate(instance, channel: channel)
-	}
-
-	private var viewController: UIViewController?
-
-	init(with vc: UIViewController?) {
-		super.init()
-		self.viewController = vc
 	}
 
 	var eventSink: FlutterEventSink?
@@ -35,13 +28,12 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 			}
 			startOAuthBy(result, authConfig: authConfig)
 		default: break
-//		result
 		}
 
 	}
 
 	var authRequest: OIDAuthorizationRequest?
-	public static var authFlow: OIDExternalUserAgentSession?
+	var authFlow: OIDExternalUserAgentSession?
 
 	func startOAuthBy(_ result: FlutterResult, authConfig: AuthConfig) {
 		guard let authEndpoint = URL(string: authConfig.endpoint.auth),
@@ -80,7 +72,7 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 				redirectURL: redirectURL,
 				responseType: OIDResponseTypeCode,
 				additionalParameters: additionalParameters)
-		SwiftFlutterAppAuthWrapperPlugin.authFlow = OIDAuthState.authState(byPresenting: authRequest!, presenting: vc) { authState, error in
+		authFlow = OIDAuthState.authState(byPresenting: authRequest!, presenting: vc) { authState, error in
 			print("auth callback")
 			if let authState = authState,
 			   let response = authState.lastTokenResponse {
@@ -110,6 +102,24 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 	func handle(error: Error) {
 		let flutterError = FlutterError(code: "OAuthError", message: error.localizedDescription, details: "No details")
 		eventSink?(flutterError)
+	}
+	
+	public func applicationDidBecomeActive(_ application: UIApplication) {
+		print("applicationDidBecomeActive")
+	}
+	
+	public func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
+		print("app handle url")
+		return false
+	}
+	
+	public func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+		print("app open url")
+		if (authFlow?.resumeExternalUserAgentFlow(with: url) ?? false) {
+			authFlow = nil
+			return true
+		}
+		return false
 	}
 
 }

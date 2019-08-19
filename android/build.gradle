@@ -9,7 +9,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -55,5 +55,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
 
+    // Waiting for 0.7.2 to fix custom tabs issue.
+    // https://github.com/openid/AppAuth-Android/issues/423
     implementation 'net.openid:appauth:0.7.0-43-g8ce60dc'
 }

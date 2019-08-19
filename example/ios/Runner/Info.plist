@@ -21,13 +21,13 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleIdentifier</key>
-			<string></string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.google.codelabs.appauth</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>your_custom_url_scheme</string>
+				<string>com.google.codelabs.appauth</string>
 			</array>
 		</dict>
 	</array>

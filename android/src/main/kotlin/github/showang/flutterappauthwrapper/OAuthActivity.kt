@@ -5,12 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import net.openid.appauth.*
+import net.openid.appauth.browser.BrowserBlacklist
+import net.openid.appauth.browser.BrowserWhitelist
+import net.openid.appauth.browser.VersionedBrowserMatcher
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -21,7 +23,6 @@ class OAuthActivity : AppCompatActivity() {
         const val INPUT_STRING_JSON_AUTH_CONFIG = "11"
 
         private const val REQUEST_AUTH_CODE = 11
-        private const val TAG = "OAuthActivity"
     }
 
     private val authConfigJson by stringExtra(INPUT_STRING_JSON_AUTH_CONFIG)
@@ -57,7 +58,10 @@ class OAuthActivity : AppCompatActivity() {
             build()
         }
 
-        authService = AuthorizationService(this)
+        authService = AuthorizationService(this, with(AppAuthConfiguration.Builder()) {
+            setBrowserMatcher(BrowserBlacklist())
+            build()
+        })
 
         val authIntent: Intent? = try {
             authService?.getAuthorizationRequestIntent(authRequest, with(CustomTabsIntent.Builder()) {
@@ -97,8 +101,6 @@ class OAuthActivity : AppCompatActivity() {
                     return
                 }
 
-                Log.e(TAG, "authorizationCode: ${resp.authorizationCode}")
-
                 authService?.performTokenRequest(resp.createTokenExchangeRequest(),
                         ClientSecretBasic(authConfig?.clientSecret ?: "")) { response, ex ->
                     response?.apply {
@@ -111,9 +113,7 @@ class OAuthActivity : AppCompatActivity() {
                     } ?: run { onError("Exchange Token Failed", ex) }
                 }
             }
-            else -> {
-                onError("Unknown callback error")
-            }
+            else -> onError("Unknown callback error")
         }
     }
 
@@ -130,6 +130,10 @@ fun stringExtra(key: String) =
         object : ReadOnlyProperty<Activity, String> {
 
             private var data: String? = null
+
+            val testFun: () -> String = {
+                ""
+            }
 
             override fun getValue(thisRef: Activity, property: KProperty<*>): String {
                 if (data == null) data = thisRef.intent.getStringExtra(key)
