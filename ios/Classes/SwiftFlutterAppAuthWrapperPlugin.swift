@@ -5,21 +5,21 @@ import AppAuth
 public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 
 	public static func register(with registrar: FlutterPluginRegistrar) {
-		let channel = FlutterMethodChannel(name: "flutter_app_auth_wrapper", binaryMessenger: registrar.messenger())
+		let methodChannel = FlutterMethodChannel(name: "flutter_app_auth_wrapper", binaryMessenger: registrar.messenger())
 		let eventChannel = FlutterEventChannel(name: "oauth_completion_events", binaryMessenger: registrar.messenger())
 		let instance = SwiftFlutterAppAuthWrapperPlugin()
-
 		eventChannel.setStreamHandler(instance)
 		registrar.addApplicationDelegate(instance)
-		registrar.addMethodCallDelegate(instance, channel: channel)
+		registrar.addMethodCallDelegate(instance, channel: methodChannel)
 	}
 
 	var eventSink: FlutterEventSink?
+	var authRequest: OIDAuthorizationRequest?
+	var authFlow: OIDExternalUserAgentSession?
 
 	public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
 		switch (call.method) {
 		case "startOAuth":
-			print("on startOAuth")
 			guard let json = call.arguments as? String,
 			      let authConfig = AuthConfig(json) else {
 				handle(error: FlutterAppAuthWrapperError.invalidParameters)
@@ -31,9 +31,6 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 		}
 
 	}
-
-	var authRequest: OIDAuthorizationRequest?
-	var authFlow: OIDExternalUserAgentSession?
 
 	func startOAuthBy(_ result: FlutterResult, authConfig: AuthConfig) {
 		guard let authEndpoint = URL(string: authConfig.endpoint.auth),
@@ -73,7 +70,6 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 				responseType: OIDResponseTypeCode,
 				additionalParameters: additionalParameters)
 		authFlow = OIDAuthState.authState(byPresenting: authRequest!, presenting: vc) { authState, error in
-			print("auth callback")
 			if let authState = authState,
 			   let response = authState.lastTokenResponse {
 				print("auth state: \(String(describing: authState))")
@@ -104,22 +100,16 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 		eventSink?(flutterError)
 	}
 	
-	public func applicationDidBecomeActive(_ application: UIApplication) {
-		print("applicationDidBecomeActive")
-	}
-	
-	public func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
-		print("app handle url")
-		return false
-	}
-	
 	public func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-		print("app open url")
 		if (authFlow?.resumeExternalUserAgentFlow(with: url) ?? false) {
 			authFlow = nil
 			return true
 		}
 		return false
+	}
+	
+	public func application(_ application: UIApplication, open url: URL, sourceApplication: String, annotation: Any) -> Bool {
+		return self.application(application, open: url, options: [:])
 	}
 
 }
