@@ -1,5 +1,4 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="github.showang.flutterappauthwrapperexample">
 
     <!-- The INTERNET permission is required for development. Specifically,
@@ -15,9 +14,9 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:label="flutter_app_auth_wrapper_example"
-        android:allowBackup="false">
+        android:label="flutter_app_auth_wrapper_example">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
@@ -37,28 +36,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            tools:node="replace">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="ACCEPTED_HOST"
-                    android:scheme="YOUR_APP_SCHEME" />
-            </intent-filter>
-
-
-        </activity>
-
-        <activity
-            android:name="github.showang.flutterappauthwrapper.OAuthActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Translucent" />
 
     </application>
 </manifest>

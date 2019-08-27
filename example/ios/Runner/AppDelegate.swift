@@ -12,14 +12,4 @@ import AppAuth
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 	
-  override func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-    print("app open url: :\(url)")
-    if (SwiftFlutterAppAuthWrapperPlugin.authFlow?.resumeExternalUserAgentFlow(with: url) ?? false) {
-	  SwiftFlutterAppAuthWrapperPlugin.authFlow = nil
-      return true
-    }
-
-    return false
-  }
-	
 }

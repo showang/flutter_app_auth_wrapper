@@ -1,6 +1,7 @@
 name: flutter_app_auth_wrapper_example
 description: Demonstrates how to use the flutter_app_auth_wrapper plugin.
 publish_to: 'none'
+version: 0.1.2+1
 
 environment:
   sdk: ">=2.0.0 <3.0.0"

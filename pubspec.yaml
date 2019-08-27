@@ -1,6 +1,6 @@
 name: flutter_app_auth_wrapper
 description: App-Auth wrapper for flutter. Allow user to making OAuth flow by CustomTabs/SafariViewController.
-version: 0.1.2
+version: 0.2.0
 author: showang <showang730@gmail.com>
 homepage: https://github.com/showang/flutter_app_auth_wrapper
 

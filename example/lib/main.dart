@@ -15,12 +15,12 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  String clientId = "Your client id";
-  String clientSecret = "Your client secret";
+  var clientId = "511828570984-fuprh0cm7665emlne3rnf9pk34kkn86s.apps.googleusercontent.com";
+  var clientSecret = "";
 
-  String redirectURL = "redirect url";
-  String authEndpoint = "auth endpoint";
-  String tokenEndpoint = "token endpoint";
+  String redirectURL = "com.google.codelabs.appauth:/oauth2callback";
+  String authEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+  String tokenEndpoint = "https://www.googleapis.com/oauth2/v4/token";
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,7 @@ class _MyAppState extends State<MyApp> {
                         endpoint: AuthEndpoint(
                             auth: authEndpoint, token: tokenEndpoint),
                         scopes: [
-                          "user_account_status",
-                          "user_territory",
-                          "user_profile"
+                          "profile"
                         ],
                       ),
                     );
