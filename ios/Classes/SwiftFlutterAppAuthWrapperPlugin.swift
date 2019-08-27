@@ -37,13 +37,13 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 		      let tokenEndpoint = URL(string: authConfig.endpoint.token),
 		      let redirectURL = URL(string: authConfig.redirectURL) else {
 			handle(error: FlutterAppAuthWrapperError.invalidURLs)
-			result(true)
+			result(false)
 			return
 		}
 
 		guard let vc = UIApplication.shared.keyWindow?.rootViewController else {
 			handle(error: FlutterAppAuthWrapperError.noViewController)
-			result(true)
+			result(false)
 			return
 		}
 
@@ -69,10 +69,10 @@ public class SwiftFlutterAppAuthWrapperPlugin: NSObject, FlutterPlugin {
 				redirectURL: redirectURL,
 				responseType: OIDResponseTypeCode,
 				additionalParameters: additionalParameters)
+
 		authFlow = OIDAuthState.authState(byPresenting: authRequest!, presenting: vc) { authState, error in
 			if let authState = authState,
 			   let response = authState.lastTokenResponse {
-				print("auth state: \(String(describing: authState))")
 				var dict: [AnyHashable: Any] = [:]
 				dict["access_token"] = response.accessToken ?? ""
 				dict["refresh_token"] = response.refreshToken ?? ""

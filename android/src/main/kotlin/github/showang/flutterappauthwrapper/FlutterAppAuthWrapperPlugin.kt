@@ -1,16 +1,16 @@
 package github.showang.flutterappauthwrapper
 
-import android.app.Activity
 import android.content.Intent
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
 
-class FlutterAppAuthWrapperPlugin(private val activity: Activity) : MethodCallHandler, EventChannel.StreamHandler {
+class FlutterAppAuthWrapperPlugin(private val registrar: Registrar) : MethodCallHandler, EventChannel.StreamHandler {
 
     companion object {
 
@@ -25,7 +25,7 @@ class FlutterAppAuthWrapperPlugin(private val activity: Activity) : MethodCallHa
         fun registerWith(registrar: Registrar) {
             val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_METHOD)
             val eventChannel = EventChannel(registrar.messenger(), CHANNEL_EVENT)
-            FlutterAppAuthWrapperPlugin(registrar.activity())
+            FlutterAppAuthWrapperPlugin(registrar)
                     .apply(methodChannel::setMethodCallHandler)
                     .also(eventChannel::setStreamHandler)
         }
@@ -39,6 +39,7 @@ class FlutterAppAuthWrapperPlugin(private val activity: Activity) : MethodCallHa
     }
 
     private fun startOAuth(call: MethodCall, result: Result) {
+        val activity = registrar.activity() ?: return
         Intent(activity.applicationContext, OAuthActivity::class.java).apply {
             putExtra(OAuthActivity.INPUT_STRING_JSON_AUTH_CONFIG, call.arguments.toString())
         }.run(activity::startActivity)
