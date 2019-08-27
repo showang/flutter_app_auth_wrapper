@@ -49,64 +49,33 @@ StreamBuilder(
 
 ### Android
 
-Only support AndroidX.
-
+Support AndroidX.
 Add following properties into `gradle.properties` to enable AndroidX support.
 ```properties
 android.enableJetifier=true
 android.useAndroidX=true
 ```
 
+When a custom scheme is used, AppAuth can be easily configured to capture all redirects using this custom scheme through a manifest placeholder:
+```groovy
+android.defaultConfig.manifestPlaceholders = [
+  'appAuthRedirectScheme': 'com.example.app'
+]
+```
 
-You need to do additional configuration in your AndroidManifest.xml to let your
-app to accept the `net.openid.appauth.RedirectUriReceiverActivity`  and
-`github.showang.flutterappauthwrapper.OAuthActivity` intent. For example:
-
+Alternatively, the redirect URI can be directly configured by adding an intent-filter for AppAuth's RedirectUriReceiverActivity to your AndroidManifest.xml:
 ```xml
-<application
-    xmlns:tools="http://schemas.android.com/tools">
-    
-    ...
-
-    <activity
+<activity
         android:name="net.openid.appauth.RedirectUriReceiverActivity"
         tools:node="replace">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-
-            <data
-                android:host="ACCEPTED_HOST"
-                android:scheme="YOUR_APP_SCHEME" />
-        </intent-filter>
-
-
-    </activity>
-
-    <activity
-        android:name="github.showang.flutterappauthwrapper.OAuthActivity"
-        android:configChanges="orientation|screenSize"
-        android:theme="@style/Theme.AppCompat.Translucent" />    
-</application> 
-
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="com.example.app"/>
+    </intent-filter>
+</activity>
 ```
-
-Add translucent theme style to `res/values`.
-
-```xml
-<style name="Theme.AppCompat.Translucent" parent="@style/Theme.AppCompat.NoActionBar">
-    <item name="android:windowNoTitle">true</item>
-    <item name="android:windowBackground">@android:color/transparent</item>
-    <item name="android:colorBackgroundCacheHint">@null</item>
-    <item name="android:windowIsTranslucent">true</item>
-    <item name="android:windowAnimationStyle">@android:style/Animation</item>
-    <item name="android:statusBarColor">@android:color/transparent</item>
-</style>
-```
-
-Replace `ACCEPTED_HOST` and `YOUR_APP_SCHEME` depends on your app's definition.
 
 For further information, please visit the page of [AppAuth Android](https://github.com/openid/AppAuth-Android).
 
@@ -128,21 +97,6 @@ You need to add your own custom URL scheme to the Info.plist file.
         </array>
     </dict>
 </array>
-```
-
-You also need to let the app delegate to handle incoming open URL requests for
-devices running iOS 9 or prior versions, if you want to support them.
-
-```swift
-override func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-
-    if (SwiftFlutterAppAuthWrapperPlugin.authFlow?.resumeExternalUserAgentFlow(with: url) ?? false) {
-        SwiftFlutterAppAuthWrapperPlugin.authFlow = nil
-        return true
-    }
-
-    return false
-}
 ```
 
 For further information, please visit the page of [AppAuth iOS](https://github.com/openid/AppAuth-iOS).
